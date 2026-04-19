@@ -6,10 +6,10 @@ import (
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
 	"github.com/milvus-io/milvus/client/v2/milvusclient"
-	ollama "github.com/ollama/ollama/api"
+	pb "github.com/radia78/orpheus/services/vector-api/internal/embedding"
 )
 
-func Handler(r *chi.Mux, mc *milvusclient.Client, oc *ollama.Client) {
+func Handler(r *chi.Mux, mc *milvusclient.Client, oc *pb.EmbedderClient) {
 	// Text cleaning
 	r.Use(chimiddle.StripSlashes)
 

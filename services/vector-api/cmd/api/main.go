@@ -7,9 +7,11 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/milvus-io/milvus/client/v2/milvusclient"
-	ollama "github.com/ollama/ollama/api"
-	"github.com/radia78/orpheus/internal/handlers"
+	pb "github.com/radia78/orpheus/services/vector-api/internal/embedding"
+	"github.com/radia78/orpheus/services/vector-api/internal/handlers"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
@@ -30,10 +32,13 @@ func main() {
 
 	// Step 2: Initialize Ollama Client
 	// For the time being we're just using the default Ollama config, we'll change this later
-	ollamaClient, err := ollama.ClientFromEnvironment()
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
+	defer conn.Close()
+
+	c := pb.NewEmbeddingServiceClient(conn)
 
 	// Step 3: Now the API is live
 	var r *chi.Mux = chi.NewRouter()
