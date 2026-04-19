@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package embedding;
+
+option go_package = "services/vector-api/internal/stub/embedding";
+
+service Embedder {
+  rpc EmbedText (TextEmbeddingRequest) returns (EmbeddingResponse);
+  rpc EmbedImage (ImageEmbeddingRequest) returns (EmbeddingResponse);
+}
+
+message TextEmbeddingRequest {
+  repeated string texts = 1; // Allows for batch processing
+}
+
+message ImageEmbeddingRequest {
+  repeated string images = 1; // Allows for batch processing
+}
+
+message EmbeddingResponse {
+  repeated Vector vectors = 1;
+}
+
+message Vector {
+  repeated float values = 1; // The high-dimensional float array
+}
